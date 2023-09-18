@@ -1,0 +1,33 @@
+.list {
+  border-radius: 30px;
+  flex-basis: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid black; */
+}
+.list-card:hover {
+  cursor: pointer;
+}
+.list-heading {
+  display: flex;
+  justify-content: space-between;
+}
+.list-card {
+  border-radius: 30px;
+  /* border: 1px solid black; */
+}
+.cards-container {
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.addcard-container {
+  display: flex;
+  margin-top: 15px;
+  gap: 5px;
+}
+.addcard-contents {
+  display: flex;
+}

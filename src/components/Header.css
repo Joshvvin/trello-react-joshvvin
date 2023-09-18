@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  /* border: 1px solid black; */
+}
+.header-container {
+  display: flex;
+  flex-basis: 80%;
+  height: 90%;
+  /* border: 1px solid black; */
+  justify-content: space-between;
+}
+.icon {
+  height: 100%;
+  width: 100%;
+}
