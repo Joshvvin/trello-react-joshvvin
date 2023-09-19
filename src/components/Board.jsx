@@ -46,7 +46,7 @@ export default function Board(props) {
     setAnchorEl(null);
   };
   let { name, id, bgcolor, image, setBoardName, setBgimage } = boardInfo;
-  // console.log(name, id, image, bgcolor);
+  console.log(name, id, image, bgcolor);
   function handleBoardClick(event) {
     setBgimage(image);
     setBoardName(name);
@@ -66,6 +66,7 @@ export default function Board(props) {
           // background: { image === undefined ? bgcolor: null },
           backgroundImage: `url(${image})`,
           backgroundSize: "cover",
+          backgroundColor: `${bgcolor}`,
           backgroundPosition: "center",
           padding: "20px",
           textAlign: "start",

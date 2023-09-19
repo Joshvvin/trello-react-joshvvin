@@ -1,4 +1,16 @@
-.checklist-item {
+.checkitem {
   flex-basis: 90%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
   /* border: 1px solid black; */
+}
+.checkitem-checkbox {
+  flex-basis: 10px;
+  /* border: 1px solid black; */
+}
+.checklist-item {
+  /* border: 1px solid black; */
+  flex-basis: 80%;
 }

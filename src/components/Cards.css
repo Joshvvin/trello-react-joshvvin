@@ -18,6 +18,7 @@
   flex-wrap: wrap;
   overflow: scroll;
   justify-content: space-between;
+  /* align-items: center; */
   /* border: 1px solid black; */
 }
 .card-name {
@@ -25,14 +26,26 @@
   flex-basis: 100%;
   /* border: 1px solid black; */
 }
-.card-name::-webkit-scrollbar {
-  display: none;
+.card-name-icon {
+  flex-basis: 20px;
 }
 .card-name-container {
-  width: 95%;
+  /* height: 40%; */
+  /* border: 1px solid black; */
+}
+.card-name-header::-webkit-scrollbar {
+  display: none;
+}
+.card-name-header {
+  flex-basis: 85%;
+  height: 5%;
   overflow: scroll;
   display: flex;
   flex-wrap: wrap;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+  /* border: 1px solid black; */
 }
 .card-name-container::-webkit-scrollbar {
   display: none;

@@ -2,22 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./Cards.css";
 import config from "../../config";
 import CheckLists from "./CheckLists";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import {
-  Typography,
-  Card,
-  CardContent,
-  Box,
-  Button,
-  Paper,
-  Modal,
-  Menu,
-  MenuItem,
-  cardActionAreaClasses,
-} from "@mui/material";
+import { Typography, Card, CardContent, Box, Modal, Menu } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,22 +15,24 @@ const style = {
   width: "50%",
   height: "90%",
   bgcolor: "background.paper",
-  //   border: "2px solid #000",
   borderRadius: "10px",
   boxShadow: 24,
-  //   gap: "50px",
   p: 4,
   textWrap: "wrap",
 };
 const apiKey = config.apiKey;
 const token = config.token;
 export default function Cards(props) {
-  const { cardInfo } = props;
-  const { name, id, idCheckLists } = cardInfo;
+  const { cardInfo, cards, setCards } = props;
+  const { name, id } = cardInfo;
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [checklistName, setChecklistName] = useState("");
+  const [allCheckLists, setAllCheckLists] = useState([]);
   const checklistopen = Boolean(anchorEl);
+
+  const addchecklisturl = `https://api.trello.com/1/cards/${id}/checklists?name=${checklistName}&key=${apiKey}&token=${token}`;
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -49,17 +40,27 @@ export default function Cards(props) {
     setAnchorEl(null);
   };
   const handleCardOpen = () => {
-    // console.log(idCheckLists);
     setOpen(true);
   };
   //   console.log(name, id);
+  useEffect(() => {
+    const getcardchecklistsurl = `https://api.trello.com/1/cards/${id}/checklists?key=${apiKey}&token=${token}`;
+    // console.log(getcardchecklistsurl);
+    axios(getcardchecklistsurl).then((res) => {
+      setAllCheckLists(res.data);
+    });
+  }, []);
   const handleCardClose = () => setOpen(false);
-  function handleCardDeleteClick() {
+  function handleCardDeleteClick(id) {
     const carddeleteurl = `https://api.trello.com/1/cards/${id}?key=${apiKey}&token=${token}`;
+    // console.log(carddeleteurl);
     axios
       .delete(carddeleteurl)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        const newCards = cards.filter((card) => {
+          return card.id != id ? true : false;
+        });
+        setCards(newCards);
       })
       .catch(console.error);
   }
@@ -67,12 +68,12 @@ export default function Cards(props) {
     setChecklistName(event.target.value);
   }
   function handleAddChecklist() {
-    const addchecklisturl = `https://api.trello.com/1/cards/${id}/checklists?name=${checklistName}&key=${apiKey}&token=${token}`;
     // console.log(addchecklisturl);
     axios
       .post(addchecklisturl)
       .then((res) => {
-        console.log(res);
+        setAllCheckLists((allCheckLists) => [...allCheckLists, res.data]);
+        // console.log(res);
       })
       .catch(console.error);
     handleClose();
@@ -86,9 +87,6 @@ export default function Cards(props) {
           borderRadius: "10px",
           width: "100%",
           height: "auto",
-          //   onClick: { handleCardOpen },
-          // border: "1px solid black",
-          // paddingLeft: "10px",
         }}
         key={id}
       >
@@ -103,17 +101,26 @@ export default function Cards(props) {
             <Typography className="card-name">{name}</Typography>
           </CardContent>
         </button>
-        <DeleteIcon onClick={handleCardDeleteClick} />
+        <DeleteIcon onClick={() => handleCardDeleteClick(id)} />
       </Card>
       <Modal open={open} onClose={handleCardClose} key={id + "1"}>
         <Box sx={style} className="card-details-container">
-          <Typography variant="h4" className="card-name-container">
-            {name}
-          </Typography>
-          {/* <button onClick={handleChecklistDelete}>Delete</button> */}
+          <div className="card-name-header">
+            <CreditCardIcon className="card-name-icon" />
+            <Typography variant="h5" className="card-name-container">
+              {name}
+            </Typography>
+          </div>
           <div className="checklists-container">
-            {idCheckLists.map((checklistid) => {
-              return <CheckLists checkListId={checklistid} key={checklistid} />;
+            {allCheckLists.map((checklist) => {
+              return (
+                <CheckLists
+                  checkList={checklist}
+                  setAllCheckLists={setAllCheckLists}
+                  allCheckLists={allCheckLists}
+                  key={checklist.id}
+                />
+              );
             })}
           </div>
           <div className="add-to-card-container">
@@ -121,9 +128,6 @@ export default function Cards(props) {
             <button
               className="checklist-button"
               id="demo-positioned-button"
-              aria-controls={open ? "demo-positioned-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
             >
               <ChecklistIcon />
@@ -131,7 +135,6 @@ export default function Cards(props) {
             </button>
             <Menu
               id="demo-positioned-menu"
-              aria-labelledby="demo-positioned-button"
               anchorEl={anchorEl}
               open={checklistopen}
               onClose={handleClose}
@@ -144,7 +147,6 @@ export default function Cards(props) {
                 horizontal: "left",
               }}
             >
-              {/* <MenuItem> */}
               <Card className="checklist-add-container">
                 <CardContent className="checklist-add-details">
                   <Typography>Add Checklist</Typography>
@@ -152,13 +154,11 @@ export default function Cards(props) {
                   <input
                     id="checklist-name"
                     type="text"
-                    // placeholder="Checklist"
                     onChange={handleChecklistNameChange}
                   />
                   <button onClick={handleAddChecklist}>Add</button>
                 </CardContent>
               </Card>
-              {/* </MenuItem> */}
             </Menu>
           </div>
         </Box>

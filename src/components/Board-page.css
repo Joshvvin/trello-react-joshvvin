@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: start;
+  align-content: start;
   width: 95%;
   height: 90%;
   margin-top: 20px;
@@ -40,8 +40,24 @@
 .list-add {
   display: flex;
   /* border: 1px solid black; */
+  /* background-color: transparent; */
+  /* opacity: 0.1; */
+  /* border-radius: 20px; */
+  background-color: #cec1cb;
   align-items: center;
   flex-wrap: wrap;
+}
+.list-add-items {
+  /* border: 1px solid black; */
+  display: flex;
+  flex-basis: 100%;
+
+  flex-direction: column;
+}
+.list-add-start {
+  /* border: 1px solid black; */
+  flex-basis: 100%;
+  /* height: 100%; */
 }
 .list-add-start {
   display: flex;

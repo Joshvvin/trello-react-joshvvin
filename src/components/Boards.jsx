@@ -27,19 +27,16 @@ export default function Boards(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const handleCreate = () => {
     const imageurl =
       "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/original/bc8cc08d6b08539640d2065f8f25d405/photo-1694250990115-ca7d9d991b24";
     const createurl = `https://api.trello.com/1/boards/?name=${newBoardName}&key=${apiKey}&token=${apiToken}`;
-    // const newBoardData = {
-    //   // name: newBoardName,
-    //   prefs_background: imageurl,
-    // };
+
     axios
       .post(createurl)
       .then((res) => {
-        console.log(res);
+        setData((oldData) => [...oldData, res.data]);
+        // console.log(res);
       })
       .catch(console.error);
     handleClose();
@@ -64,17 +61,12 @@ export default function Boards(props) {
             <Paper
               className="createBoard"
               sx={{ backgroundColor: "#D6D6D6" }}
-              // onClick={handleClick}
-              aria-controls={open ? "demo-positioned-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
             >
               <Typography variant="h5">Create new board</Typography>
             </Paper>
             <Menu
               id="demo-positioned-menu"
-              aria-labelledby="demo-positioned-button"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
@@ -103,7 +95,7 @@ export default function Boards(props) {
               let boardInfo = {
                 name: board.name,
                 id: board.id,
-                bgcolor: board.prefs.background,
+                bgcolor: board.prefs.backgroundColor,
                 image: board.prefs.backgroundImage,
                 setBoardName: setBoardName,
                 setBgimage: setBgimage,

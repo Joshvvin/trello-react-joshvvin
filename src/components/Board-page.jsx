@@ -1,63 +1,58 @@
 import React, { useState, useEffect } from "react";
-import "./Board-page.css";
 import { Link, useParams } from "react-router-dom";
+import "./Board-page.css";
 import axios from "axios";
 import List from "./List.jsx";
 import config from "../../config";
-import {
-  Typography,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Box,
-  Button,
-  Paper,
-  Container,
-} from "@mui/material";
+import { Typography, Card, CardContent, Box, Paper } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+
 const apiKey = config.apiKey;
 const apiToken = config.token;
+
 export default function BoardPage(props) {
   const { boardName, bgimage } = props;
   const { id } = useParams();
   const [isListAddVisible, setIsListAddVisible] = useState(false);
-  const board_url = `https://api.trello.com/1/boards/${id}/lists?key=${apiKey}&token=${apiToken}`;
   const [boardLists, setBoardLists] = useState([]);
   const [listName, setListName] = useState("");
+
+  const board_url = `https://api.trello.com/1/boards/${id}/lists?key=${apiKey}&token=${apiToken}`;
+  const createListUrl = `https://api.trello.com/1/lists?name=${listName}&idBoard=${id}&key=${apiKey}&token=${apiToken}`;
+
   useEffect(() => {
     axios(board_url)
       .then((res) => {
-        // console.log(res.data);
         setBoardLists(res.data);
       })
       .catch(console.error);
   }, []);
-  // console.log(boardName, bgimage);
+
   function handleAddList(event) {
-    // console.log(event.target);
     setIsListAddVisible(true);
   }
+
   function handleCreateList() {
-    const createListUrl = `https://api.trello.com/1/lists?name=${listName}&idBoard=${id}&key=${apiKey}&token=${apiToken}`;
     axios
       .post(createListUrl)
       .then((res) => {
-        console.log(res);
+        setBoardLists((oldBoardLists) => [...oldBoardLists, res.data]);
+        // console.log(res);
       })
       .catch(console.error);
     setIsListAddVisible(false);
   }
+
   function handleListName(event) {
     setListName(event.target.value);
   }
+
   return (
     <Paper
       style={{
         width: "100%",
         height: "92.94vh",
         margin: "auto",
-        // border: "1px solid black",
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "center",
@@ -73,17 +68,20 @@ export default function BoardPage(props) {
       </Box>
       <Box className="board-lists" component="div">
         {boardLists.map((blist) => {
-          return <List name={blist.name} key={blist.id} id={blist.id} />;
+          return (
+            <List
+              name={blist.name}
+              key={blist.id}
+              id={blist.id}
+              setBoardLists={setBoardLists}
+              boardLists={boardLists}
+            />
+          );
         })}
         <div className="list">
           <Card
-            className="list-card"
-            style={{
-              backgroundColor: "#F1F2F4",
-              borderRadius: "20px",
-              width: "100%",
-            }}
-            onClick={handleAddList}
+            className="list-card list-add-card"
+            style={{ borderRadius: "20px" }}
           >
             <CardContent className="list-add">
               {isListAddVisible ? (
@@ -95,9 +93,9 @@ export default function BoardPage(props) {
                   <button onClick={handleCreateList}>Add List</button>
                 </div>
               ) : (
-                <div className="list-add-start">
+                <div className="list-add-start" onClick={handleAddList}>
                   <AddIcon />
-                  <Typography variant="h6" sx={{ paddingLeft: "10px" }}>
+                  <Typography sx={{ paddingLeft: "10px" }}>
                     Add another list
                   </Typography>
                 </div>
