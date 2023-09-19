@@ -54,6 +54,7 @@
   height: 80px;
   flex-wrap: wrap;
   /* flex-direction: column; */
+  /* background-color: white; */
   align-content: space-between;
   justify-content: start;
   column-gap: 20px;

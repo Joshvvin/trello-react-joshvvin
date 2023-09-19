@@ -58,6 +58,7 @@
   flex-basis: 90%;
   height: 20%;
   cursor: pointer;
+  font-size: 18px;
 }
 .board-title-input {
   flex-basis: 40%;

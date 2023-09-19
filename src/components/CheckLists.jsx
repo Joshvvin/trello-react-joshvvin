@@ -98,8 +98,6 @@ export default function CheckLists(props) {
                       checkItems={checkItems}
                       setCheckItems={setCheckItems}
                       idCard={checkList.idCard}
-                      // checkListDetails={checkListDetails}
-                      // setCheckListDetails={setCheckListDetails}
                     />
                   );
                 })
@@ -118,15 +116,25 @@ export default function CheckLists(props) {
                   setCheckItemName(event.target.value);
                 }}
               />
-              <button
+              <Button
+                variant="contained"
                 className="add-checkitem-button"
                 onClick={handleCreateCheckitem}
               >
                 Add
+              </Button>
+              <button
+                className="add-checkitem-close"
+                onClick={() => {
+                  setIsAddCheckItemVisible(false);
+                }}
+              >
+                Cancel
               </button>
             </div>
           ) : (
             <button
+              className="checkitem-add-an-item-button"
               onClick={() => {
                 setIsAddCheckItemVisible(true);
               }}

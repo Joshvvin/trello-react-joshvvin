@@ -1,5 +1,5 @@
 .checkitem {
-  flex-basis: 90%;
+  flex-basis: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -12,5 +12,5 @@
 }
 .checklist-item {
   /* border: 1px solid black; */
-  flex-basis: 80%;
+  flex-basis: 95%;
 }
