@@ -3,27 +3,21 @@ import "./Boards.css";
 import axios from "axios";
 import Board from "./Board";
 import config from "../../config";
-import {
-  Typography,
-  Box,
-  Paper,
-  Menu,
-  MenuItem,
-  Card,
-  CardContent,
-} from "@mui/material";
+import { Typography, Box, Paper, Popover, Button } from "@mui/material";
 const apiKey = config.apiKey;
 const apiToken = config.token;
 const url = `https://api.trello.com/1/members/me/boards?key=${apiKey}&token=${apiToken}`;
+const style = {};
 export default function Boards(props) {
   const { setBoardName, setBgimage } = props;
   const [data, setData] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
   const [newBoardName, setNewBoardName] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -39,6 +33,8 @@ export default function Boards(props) {
         // console.log(res);
       })
       .catch(console.error);
+
+    // setNewBoardName("");
     handleClose();
   };
   const handleInputChange = (event) => {
@@ -65,7 +61,7 @@ export default function Boards(props) {
             >
               <Typography variant="h5">Create new board</Typography>
             </Paper>
-            <Menu
+            {/* <Menu
               id="demo-positioned-menu"
               anchorEl={anchorEl}
               open={open}
@@ -89,7 +85,39 @@ export default function Boards(props) {
                 ></input>
                 <button onClick={handleCreate}>Create</button>
               </MenuItem>
-            </Menu>
+            </Menu> */}
+            <Popover
+              id="modal-popover"
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              <div className="create-board-container">
+                <Typography variant="h6" className="create-board-header">
+                  Create New Board
+                </Typography>
+                <div className="board-title-container">
+                  <label htmlFor="board-title">Board title</label>
+                  <input
+                    type="text"
+                    id="board-title"
+                    className="board-title-input"
+                    onChange={handleInputChange}
+                  ></input>
+                </div>
+                <button className="create-board-button" onClick={handleCreate}>
+                  Create
+                </button>
+              </div>
+            </Popover>
             {data.map((board) => {
               // console.log(board);
               let boardInfo = {

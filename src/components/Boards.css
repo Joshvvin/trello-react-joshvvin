@@ -31,10 +31,34 @@
   cursor: pointer;
   background-color: #a09f9f;
 }
-.menu-item {
-  width: 100%;
-  height: 50%;
+.create-board-container {
+  display: flex;
+  width: 250px;
+  height: 200px;
+  flex-wrap: wrap;
+  /* border: 1px solid black; */
+  justify-content: center;
+  align-content: space-evenly;
+  /* border-radius: 10px; */
+}
+.create-board-header {
+  flex-basis: 90%;
+  display: flex;
+  justify-content: center;
+}
+.board-title-container {
+  flex-basis: 90%;
+  height: 40%;
   display: flex;
   flex-direction: column;
-  /* background-color: white; */
+  justify-content: center;
+  /* border: 1px solid black; */
+}
+.create-board-button {
+  flex-basis: 90%;
+  height: 20%;
+  cursor: pointer;
+}
+.board-title-input {
+  flex-basis: 40%;
 }

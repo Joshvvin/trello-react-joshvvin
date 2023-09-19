@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "./Board-page.css";
 import axios from "axios";
 import List from "./List.jsx";
 import config from "../../config";
-import { Typography, Card, CardContent, Box, Paper } from "@mui/material";
+import {
+  Typography,
+  Card,
+  CardContent,
+  Box,
+  Paper,
+  Button,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 const apiKey = config.apiKey;
 const apiToken = config.token;
@@ -87,10 +95,23 @@ export default function BoardPage(props) {
               {isListAddVisible ? (
                 <div className="list-add-items">
                   <input
+                    className="list-add-input"
                     placeholder="Enter list title..."
                     onChange={handleListName}
                   ></input>
-                  <button onClick={handleCreateList}>Add List</button>
+                  <Button
+                    className="list-add-button"
+                    onClick={handleCreateList}
+                    variant="contained"
+                  >
+                    Add List
+                  </Button>
+                  <CloseIcon
+                    className="close-add-list"
+                    onClick={() => {
+                      setIsListAddVisible(false);
+                    }}
+                  />
                 </div>
               ) : (
                 <div className="list-add-start" onClick={handleAddList}>
