@@ -1,7 +1,7 @@
 .list {
   border-radius: 30px;
   flex-basis: 100%;
-  min-width: 20%;
+  width: 20%;
   display: flex;
   flex-direction: column;
   /* border: 1px solid black; */
@@ -29,5 +29,20 @@
   gap: 5px;
 }
 .addcard-contents {
+  margin-top: 20px;
   display: flex;
+  width: 100%;
+  /* border: 1px solid black; */
+  height: 100px;
+  row-gap: 10px;
+  column-gap: 20px;
+  flex-wrap: wrap;
+}
+.card-name-input {
+  flex-basis: 100%;
+  /* border: 1px solid black; */
+}
+.close-add-card {
+  flex-basis: 15%;
+  margin-top: 5px;
 }

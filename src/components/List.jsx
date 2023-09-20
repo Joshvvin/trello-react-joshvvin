@@ -11,8 +11,11 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  TextField,
+  Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 const apiKey = config.apiKey;
 const token = config.token;
@@ -69,6 +72,7 @@ export default function List(props) {
       })
       .catch(console.error);
     // });
+    setCardName("");
   }
 
   useEffect(() => {
@@ -132,11 +136,31 @@ export default function List(props) {
           </div>
           {isCardAddVisible ? (
             <div className="addcard-contents">
-              <input
+              {/* <input
                 onChange={handleCardNameChange}
                 placeholder="Enter a title for this card..."
               ></input>
-              <button onClick={handleAddCard}>Add card</button>
+              <button onClick={handleAddCard}>Add card</button> */}
+              <TextField
+                id="outlined-basic"
+                label="Enter a title for this card..."
+                variant="outlined"
+                className="card-name-input"
+                onChange={handleCardNameChange}
+              />
+              <Button
+                variant="contained"
+                className="add-card-button"
+                onClick={handleAddCard}
+              >
+                Add card
+              </Button>
+              <CloseIcon
+                className="close-add-card"
+                onClick={() => {
+                  setIsCardAddVisible(false);
+                }}
+              />
             </div>
           ) : (
             <div className="addcard-container" onClick={handleAddCardClick}>
