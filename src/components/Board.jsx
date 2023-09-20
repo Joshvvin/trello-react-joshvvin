@@ -46,7 +46,7 @@ export default function Board(props) {
     setAnchorEl(null);
   };
   let { name, id, bgcolor, image, setBoardName, setBgimage } = boardInfo;
-  console.log(name, id, image, bgcolor);
+  // console.log(name, id, image, bgcolor);
   function handleBoardClick(event) {
     setBgimage(image);
     setBoardName(name);
@@ -54,10 +54,10 @@ export default function Board(props) {
   return (
     <Link
       to={"/boards/" + id}
-      style={{
-        flexBasis: "18%",
-        height: "20%",
-      }}
+      // style={{
+      //   flexBasis: "18%",
+      //   height: "20%",
+      // }}
       className="board-container"
       onClick={handleBoardClick}
     >

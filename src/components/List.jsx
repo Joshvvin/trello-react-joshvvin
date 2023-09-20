@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
+import Loader from "./Loader";
 
 const apiKey = config.apiKey;
 const token = config.token;
@@ -27,6 +28,7 @@ export default function List(props) {
   const [cardName, setCardName] = useState("");
   const [cards, setCards] = useState([]);
   const [isCardAddVisible, setIsCardAddVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const archivelisturl = `https://api.trello.com/1/lists/${id}/?closed=true&key=${apiKey}&token=${token}`;
   const addcardurl = `https://api.trello.com/1/cards?idList=${id}&name=${cardName}&key=${apiKey}&token=${token}`;
@@ -80,11 +82,14 @@ export default function List(props) {
       .then((res) => {
         // console.log(res.data);
         setCards(res.data);
+        setLoading(false);
       })
       .catch(console.error);
   }, []);
   // console.log(name, cards);
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="list">
       <Card
         className="list-card"
@@ -136,11 +141,6 @@ export default function List(props) {
           </div>
           {isCardAddVisible ? (
             <div className="addcard-contents">
-              {/* <input
-                onChange={handleCardNameChange}
-                placeholder="Enter a title for this card..."
-              ></input>
-              <button onClick={handleAddCard}>Add card</button> */}
               <TextField
                 id="outlined-basic"
                 label="Enter a title for this card..."

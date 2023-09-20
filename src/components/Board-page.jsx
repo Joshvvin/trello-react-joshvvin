@@ -12,6 +12,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import Loader from "./Loader";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -24,6 +25,7 @@ export default function BoardPage(props) {
   const [isListAddVisible, setIsListAddVisible] = useState(false);
   const [boardLists, setBoardLists] = useState([]);
   const [listName, setListName] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const board_url = `https://api.trello.com/1/boards/${id}/lists?key=${apiKey}&token=${apiToken}`;
   const createListUrl = `https://api.trello.com/1/lists?name=${listName}&idBoard=${id}&key=${apiKey}&token=${apiToken}`;
@@ -32,6 +34,7 @@ export default function BoardPage(props) {
     axios(board_url)
       .then((res) => {
         setBoardLists(res.data);
+        setLoading(false);
       })
       .catch(console.error);
   }, []);
@@ -55,7 +58,9 @@ export default function BoardPage(props) {
     setListName(event.target.value);
   }
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <Paper
       style={{
         width: "100%",

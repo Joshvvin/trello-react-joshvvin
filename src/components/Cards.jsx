@@ -7,6 +7,8 @@ import { Typography, Card, CardContent, Box, Modal, Menu } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
+import Loader from "./Loader";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -30,6 +32,7 @@ export default function Cards(props) {
   const [checklistName, setChecklistName] = useState("");
   const [allCheckLists, setAllCheckLists] = useState([]);
   const checklistopen = Boolean(anchorEl);
+  const [loading, setLoading] = useState(true);
 
   const addchecklisturl = `https://api.trello.com/1/cards/${id}/checklists?name=${checklistName}&key=${apiKey}&token=${token}`;
 
@@ -46,9 +49,12 @@ export default function Cards(props) {
   useEffect(() => {
     const getcardchecklistsurl = `https://api.trello.com/1/cards/${id}/checklists?key=${apiKey}&token=${token}`;
     // console.log(getcardchecklistsurl);
-    axios(getcardchecklistsurl).then((res) => {
-      setAllCheckLists(res.data);
-    });
+    axios(getcardchecklistsurl)
+      .then((res) => {
+        setAllCheckLists(res.data);
+        setLoading(false);
+      })
+      .catch(console.error);
   }, []);
   const handleCardClose = () => setOpen(false);
   function handleCardDeleteClick(id) {
@@ -78,7 +84,9 @@ export default function Cards(props) {
       .catch(console.error);
     handleClose();
   }
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <>
       <Card
         className="cards"

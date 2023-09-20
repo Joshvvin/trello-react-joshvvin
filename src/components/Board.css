@@ -1,3 +1,5 @@
 .board-container {
   text-decoration: none;
+  flex-basis: 18%;
+  height: 20%;
 }
