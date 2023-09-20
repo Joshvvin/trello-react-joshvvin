@@ -7,7 +7,6 @@ import { Typography, IconButton, Menu, MenuItem } from "@mui/material";
 export default function CheckItem(props) {
   const { checkitemobj, checkListId, checkItems, setCheckItems, idCard } =
     props;
-  const [checked, setChecked] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const apiKey = config.apiKey;
@@ -20,7 +19,6 @@ export default function CheckItem(props) {
     setAnchorEl(null);
   };
   function handleDeleteCheckitem() {
-    // console.log(checkitemobj);
     const deletecheckitemurl = `https://api.trello.com/1/checklists/${checkListId}/checkItems/${checkitemobj.id}?key=${apiKey}&token=${token}`;
     axios
       .delete(deletecheckitemurl)
@@ -37,9 +35,19 @@ export default function CheckItem(props) {
     const data = {
       state: checked ? "complete" : "incomplete",
     };
+    const updatedCheckItems = checkItems.map((citem) => {
+      if (citem.id !== checkitemobj.id) {
+        return citem;
+      } else {
+        const newcitem = { ...citem, state: data.state };
+        return newcitem;
+      }
+    });
+
+    // updateProgress();
     axios
       .put(checkiteminputchangeurl, data)
-      .then(console.log)
+      .then(setCheckItems(updatedCheckItems))
       .catch(console.error);
   }
   return (
@@ -47,12 +55,26 @@ export default function CheckItem(props) {
       <input
         type="checkbox"
         id={checkitemobj.id}
+        checked={
+          checkItems.filter((citem) => citem.id === checkitemobj.id)[0]
+            .state === "complete"
+            ? true
+            : false
+        }
         className="checkitem-checkbox"
         onChange={(e) => {
           handleInputChange(e.target.checked, checkitemobj.id);
         }}
       />
-      <Typography className="checklist-item">{checkitemobj.name}</Typography>
+      <Typography
+        className={
+          "checklist-item" +
+          " " +
+          checkItems.filter((citem) => citem.id === checkitemobj.id)[0].state
+        }
+      >
+        {checkitemobj.name}
+      </Typography>
       <div>
         <IconButton id="checkitem-horizicon" onClick={handleClick}>
           <MoreHorizIcon />

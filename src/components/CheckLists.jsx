@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { Checklist } from "@mui/icons-material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import LinearProgress from "@mui/material/LinearProgress";
 const apiKey = config.apiKey;
 const token = config.token;
 export default function CheckLists(props) {
@@ -24,6 +25,7 @@ export default function CheckLists(props) {
   const [checkItems, setCheckItems] = useState([]);
   const [isAddCheckItemVisible, setIsAddCheckItemVisible] = useState(false);
   const [checkItemName, setCheckItemName] = useState("");
+  const [progress, setProgress] = useState(0);
   const url = `https://api.trello.com/1/checklists/${checkList.id}/checkItems?key=${apiKey}&token=${token}`;
   useEffect(() => {
     axios(url)
@@ -31,6 +33,7 @@ export default function CheckLists(props) {
         // console.log(res);
         setCheckItems(res.data);
         // setCards(res.data);
+        // updateProgress();
       })
       .catch(console.error);
   }, []);
@@ -50,6 +53,22 @@ export default function CheckLists(props) {
       })
       .catch(console.error);
   }
+  function updateProgress() {
+    let completedcheckitems = 0;
+    checkItems.forEach((citem) => {
+      if (citem.state === "complete") {
+        completedcheckitems++;
+      }
+    });
+    // console.log(checkItems.length, completedcheckitems);
+    const percentage = Math.floor(
+      (completedcheckitems / checkItems.length) * 100
+    );
+    setProgress(percentage);
+  }
+  useEffect(() => {
+    updateProgress();
+  }, [checkItems]);
   function handleCreateCheckitem() {
     const createcheckitemurl = `https://api.trello.com/1/checklists/${checkList.id}/checkItems?name=${checkItemName}&key=${apiKey}&token=${token}`;
     axios
@@ -78,7 +97,14 @@ export default function CheckLists(props) {
             Delete
           </button>
         </div>
-        <CardContent className="checklist-progress-container"></CardContent>
+        <div className="checklist-progress-container">
+          <div className="progress-percentage">{progress}%</div>
+          <LinearProgress
+            variant="determinate"
+            className="progress-bar"
+            value={progress}
+          />
+        </div>
         <CardContent className="checklist-details-container">
           {/* {console.log(checkListDetails.checkItems)} */}
           <div className="checkitems-container">
@@ -98,6 +124,9 @@ export default function CheckLists(props) {
                       checkItems={checkItems}
                       setCheckItems={setCheckItems}
                       idCard={checkList.idCard}
+                      // progress={progress}
+                      // setProgress={setProgress}
+                      // updateProgress={updateProgress}
                     />
                   );
                 })

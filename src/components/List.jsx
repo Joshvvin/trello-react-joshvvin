@@ -66,6 +66,7 @@ export default function List(props) {
 
   function handleAddCard() {
     // useEffect(() => {
+    // setCardName("");
     axios
       .post(addcardurl)
       .then((res) => {
@@ -74,7 +75,6 @@ export default function List(props) {
       })
       .catch(console.error);
     // });
-    setCardName("");
   }
 
   useEffect(() => {
@@ -87,9 +87,7 @@ export default function List(props) {
       .catch(console.error);
   }, []);
   // console.log(name, cards);
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <div className="list">
       <Card
         className="list-card"

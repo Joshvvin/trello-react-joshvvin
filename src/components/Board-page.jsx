@@ -48,7 +48,6 @@ export default function BoardPage(props) {
       .post(createListUrl)
       .then((res) => {
         setBoardLists((oldBoardLists) => [...oldBoardLists, res.data]);
-        // console.log(res);
       })
       .catch(console.error);
     setIsListAddVisible(false);
