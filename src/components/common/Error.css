@@ -1,0 +1,14 @@
+.error-container {
+  width: 96vw;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid black; */
+  position: relative;
+}
+.error {
+  position: absolute;
+  top: 0;
+  right: 46.1%;
+}

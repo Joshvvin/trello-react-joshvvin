@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./CheckItem.css";
 import axios from "axios";
-import config from "../../config";
+import config from "../../../config";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Typography, IconButton, Menu, MenuItem } from "@mui/material";
 export default function CheckItem(props) {
-  const { checkitemobj, checkListId, checkItems, setCheckItems, idCard } =
+  const { checkitemobj, checkListId, checkItems, dispatchCheckitems, idCard } =
     props;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -26,7 +26,7 @@ export default function CheckItem(props) {
         const newcheckitems = checkItems.filter(
           (citem) => citem.id != checkitemobj.id
         );
-        setCheckItems(newcheckitems);
+        dispatchCheckitems({ type: "getCheckitems", payload: newcheckitems });
       })
       .catch(console.error);
   }
@@ -44,10 +44,14 @@ export default function CheckItem(props) {
       }
     });
 
-    // updateProgress();
     axios
       .put(checkiteminputchangeurl, data)
-      .then(setCheckItems(updatedCheckItems))
+      .then(
+        dispatchCheckitems({
+          type: "getCheckitems",
+          payload: updatedCheckItems,
+        })
+      )
       .catch(console.error);
   }
   return (

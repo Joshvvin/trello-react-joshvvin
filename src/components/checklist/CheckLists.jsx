@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import "./CheckLists.css";
 import axios from "axios";
-import config from "../../config";
-import CheckItem from "./CheckItem";
+import config from "../../../config";
+import CheckItem from "../checkitems/CheckItem";
 import {
   Typography,
   Card,
-  CardActions,
   CardContent,
-  CardMedia,
-  Box,
   Button,
-  Paper,
-  Modal,
   TextField,
 } from "@mui/material";
 import { Checklist } from "@mui/icons-material";
@@ -20,9 +15,20 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import LinearProgress from "@mui/material/LinearProgress";
 const apiKey = config.apiKey;
 const token = config.token;
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "getCheckitems":
+      return { checkItems: action.payload };
+    case "addCheckitem":
+      return { checkItems: [...state.checkItems, action.payload] };
+    default:
+      throw new Error();
+  }
+};
 export default function CheckLists(props) {
-  const { checkList, setAllCheckLists, allCheckLists } = props;
-  const [checkItems, setCheckItems] = useState([]);
+  const { checkList, dispatchChecklists, allCheckLists } = props;
+  // const [checkItems, setCheckItems] = useState([]);
+  const [state, dispatchCheckitems] = useReducer(reducer, { checkItems: [] });
   const [isAddCheckItemVisible, setIsAddCheckItemVisible] = useState(false);
   const [checkItemName, setCheckItemName] = useState("");
   const [progress, setProgress] = useState(0);
@@ -30,10 +36,8 @@ export default function CheckLists(props) {
   useEffect(() => {
     axios(url)
       .then((res) => {
-        // console.log(res);
-        setCheckItems(res.data);
-        // setCards(res.data);
-        // updateProgress();
+        // setCheckItems(res.data);
+        dispatchCheckitems({ type: "getCheckitems", payload: res.data });
       })
       .catch(console.error);
   }, []);
@@ -48,33 +52,38 @@ export default function CheckLists(props) {
         const newCheckLists = allCheckLists.filter((clist) => {
           return clist.id != checkList.id ? true : false;
         });
-        setAllCheckLists(newCheckLists);
+        dispatchChecklists({ type: "removeChecklist", payload: newCheckLists });
         // console.log(res);
       })
       .catch(console.error);
   }
   function updateProgress() {
     let completedcheckitems = 0;
-    checkItems.forEach((citem) => {
+    state.checkItems.forEach((citem) => {
       if (citem.state === "complete") {
         completedcheckitems++;
       }
     });
-    // console.log(checkItems.length, completedcheckitems);
-    const percentage = Math.floor(
-      (completedcheckitems / checkItems.length) * 100
+    let percentage = Math.floor(
+      (completedcheckitems / state.checkItems.length) * 100
     );
-    setProgress(percentage);
+    if (percentage === NaN) {
+      percentage = 0;
+    }
+    setProgress(
+      state.checkItems.length === 0 ? state.checkItems.length : percentage
+    );
   }
   useEffect(() => {
     updateProgress();
-  }, [checkItems]);
+  }, [state.checkItems]);
   function handleCreateCheckitem() {
     const createcheckitemurl = `https://api.trello.com/1/checklists/${checkList.id}/checkItems?name=${checkItemName}&key=${apiKey}&token=${token}`;
     axios
       .post(createcheckitemurl)
       .then((res) => {
-        setCheckItems((oldCheckItems) => [...oldCheckItems, res.data]);
+        // setCheckItems((oldCheckItems) => [...oldCheckItems, res.data]);
+        dispatchCheckitems({ type: "addCheckitem", payload: res.data });
       })
       .catch(console.error);
     setIsAddCheckItemVisible(false);
@@ -82,9 +91,7 @@ export default function CheckLists(props) {
   return (
     <>
       <Card className="checklists-cards" key={checkList.id}>
-        {/* <button className="card-button" key={checkListId + " button"}> */}
         <div className="checklist-header-container">
-          {/* <CreditCardIcon /> */}
           <TaskAltIcon className="checklist-header-icon" />
           <Typography
             id={checkList.id}
@@ -106,10 +113,9 @@ export default function CheckLists(props) {
           />
         </div>
         <CardContent className="checklist-details-container">
-          {/* {console.log(checkListDetails.checkItems)} */}
           <div className="checkitems-container">
-            {checkItems !== undefined
-              ? checkItems.map((checkItem) => {
+            {state.checkItems !== undefined
+              ? state.checkItems.map((checkItem) => {
                   // console.log(checkItem);
                   const checkitemobj = {
                     name: checkItem.name,
@@ -121,12 +127,9 @@ export default function CheckLists(props) {
                       key={checkItem.id}
                       checkitemobj={checkitemobj}
                       checkListId={checkList.id}
-                      checkItems={checkItems}
-                      setCheckItems={setCheckItems}
+                      checkItems={state.checkItems}
+                      dispatchCheckitems={dispatchCheckitems}
                       idCard={checkList.idCard}
-                      // progress={progress}
-                      // setProgress={setProgress}
-                      // updateProgress={updateProgress}
                     />
                   );
                 })

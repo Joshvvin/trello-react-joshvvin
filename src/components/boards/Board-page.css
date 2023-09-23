@@ -34,8 +34,6 @@
 }
 .list-add {
   display: flex;
-  /* background-color: #cec1cb; */
-  /* border: 1px solid black; */
   align-items: center;
   flex-wrap: wrap;
 }

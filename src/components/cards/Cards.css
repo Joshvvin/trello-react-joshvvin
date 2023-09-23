@@ -5,8 +5,6 @@
   justify-content: start;
   text-align: start;
   flex-basis: 90%;
-  /* overflow: scroll; */
-  /* border: 1px solid black; */
 }
 .cards {
   /* border: 1px solid black; */
@@ -18,8 +16,6 @@
   flex-wrap: wrap;
   overflow: scroll;
   justify-content: space-between;
-  /* align-items: center; */
-  /* border: 1px solid black; */
 }
 .card-name {
   /* overflow: scroll; */
@@ -28,10 +24,6 @@
 }
 .card-name-icon {
   flex-basis: 20px;
-}
-.card-name-container {
-  /* height: 40%; */
-  /* border: 1px solid black; */
 }
 .card-name-header::-webkit-scrollbar {
   display: none;
